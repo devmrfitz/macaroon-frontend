@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "macaroon-frontend"
+  },
+  "targets": {
+    "macaroon-frontend": {
+      "hosting": {
+        "macaroon": [
+          "macaroon"
+        ]
+      }
+    }
   }
 }

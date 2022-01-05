@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "macaroon",
     "public": "dist",
     "ignore": [
       "firebase.json",
