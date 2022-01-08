@@ -135,12 +135,12 @@ export default function ContactsModal(props) {
                             email: newContact,
                         }).then(response => {
                             setContacts([...contacts, response.data]);
-                            showAlert("success", "Contact added successfully");
+                            showAlert( "Contact added successfully", "success");
                             setNewContact("");
                         }).catch(error => {
                             // check status code
                             if (error.response.status === 404) {
-                                showAlert("error", "Email address not found in database");
+                                showAlert("Email address not found in database", "error");
                             }
                         });
                     }}
