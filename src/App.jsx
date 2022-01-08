@@ -24,7 +24,9 @@ function App() {
                   setLoggedIn={setLoggedIn}
               />
 
-              <Welcome />
+              <Welcome
+                  isAuthenticated={loggedIn}
+              />
           </div>
 
           <Services />

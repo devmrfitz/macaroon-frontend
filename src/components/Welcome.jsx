@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useContext, useState} from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { SiEthereum } from "react-icons/si";
 import { BsInfoCircle } from "react-icons/bs";
@@ -7,6 +7,7 @@ import { TransactionContext } from "../context/TransactionContext";
 import axios from "../utilities/axios";
 import { shortenAddress } from "../utils/shortenAddress";
 import { Loader } from ".";
+import ContactsModal from "./ContactsModal";
 
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
@@ -21,8 +22,9 @@ function Input({ placeholder, name, type, value, handleChange }) {
           />)
 }
 
-function Welcome() {
+function Welcome({isAuthenticated}) {
   const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading } = useContext(TransactionContext);
+  const [modal, setModal] = useState("");
 
   const handleSubmit = (e) => {
     const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
@@ -79,6 +81,21 @@ function Welcome() {
                       </p>
                   </button>
           )}
+
+                  {isAuthenticated && (
+                      <button
+                          className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+                          onClick={() => setModal("contacts")}
+                          type="button"
+                      >
+
+
+                          <p className="text-white text-base font-semibold">
+                              Show Contacts
+                          </p>
+
+                          <AiFillPlayCircle className="text-white ms-2" />
+                      </button>)}
 
                   <div className="grid sm:grid-cols-3 grid-cols-2 w-full mt-10">
                       <div className={`rounded-tl-2xl ${companyCommonStyles}`}>
@@ -207,6 +224,10 @@ function Welcome() {
                   </div>
               </div>
           </div>
+          <ContactsModal
+              onHide={() => setModal("")}
+              show={modal === "contacts"}
+          />
       </div>
   );
 }
