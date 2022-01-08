@@ -10,7 +10,7 @@ function GoogleSignIn ({isAuthenticated, setLoggedIn, setStage, stage, visibilit
     async function profileExists (googleUser) {
         if (stage==="button")
             return {
-                res:await axios.get("connect/profile/?format=json"),
+                res:await axios.get("app/profile/?format=json"),
                 googleUser: googleUser
             }
     }
@@ -47,7 +47,7 @@ function GoogleSignIn ({isAuthenticated, setLoggedIn, setStage, stage, visibilit
     async function onSignIn(googleUser) {
         if (stage === "button") {
 
-            let res_temp = await axios.post("authenticate/oauthcallback/", {
+            let res_temp = await axios.post("app/oauthcallback/", {
                 "jwt": googleUser.credential
             })
             setToken(res_temp.data['access_token'])

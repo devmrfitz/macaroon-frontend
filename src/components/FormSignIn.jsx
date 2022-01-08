@@ -22,17 +22,15 @@ class FormSignIn extends React.Component {
         super(props);
         this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
         this.handleChangeLastName = this.handleChangeLastName.bind(this);
-        this.handleChangeDegree = this.handleChangeDegree.bind(this);
-        this.handleChangeCourse = this.handleChangeCourse.bind(this);
+        this.handleChangePublicKey = this.handleChangePublicKey.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state = {
             FirstName: this.props.firstName,
             LastName:this.props.lastName,
             email: this.props.emailId,
-            degree: '',
-            course:'',
             isLoading: false,
+            publicKey: "",
             currentModal:true
         }
     }
@@ -50,12 +48,8 @@ class FormSignIn extends React.Component {
         this.setState({ LastName: e.target.value })
     }
 
-    handleChangeDegree(e) {
-        this.setState({ degree: e.target.value })
-    }
-
-    handleChangeCourse(e) {
-        this.setState({ course: e.target.value })
+    handleChangePublicKey(e) {
+        this.setState({ publicKey: e.target.value })
     }
 
     handleCloseModal() {
@@ -65,17 +59,16 @@ class FormSignIn extends React.Component {
     }
 
     handleSubmit(e) {
-        this.handleCloseModal
+        this.handleCloseModal()
         this.setState({isLoading: true})
 
         let payload = {
             First_Name :this.state.FirstName,
             Last_Name :this.state.LastName,
-            degree :this.state.degree,
-            course :this.state.course,
+            publicKey :this.state.publicKey,
         }
 
-        axios.post(backend + "connect/profile/", payload)
+        axios.post("app/profile/", payload)
             .then((res) => {
                 localStorage.setItem("id", res.data.id)
             this.props.onSubmit()
@@ -85,8 +78,7 @@ class FormSignIn extends React.Component {
         this.setState({
             FirstName: '',
             LastName:'',
-            degree: '',
-            course:''
+            publicKey: '',
         })
         e.preventDefault();
 
@@ -107,7 +99,7 @@ class FormSignIn extends React.Component {
             >
                 <Modal.Header className="bg-dark">
                     <Modal.Title className="text-light">
-                        Lets Create your Profile Amigo!!
+                        Lets Create your Profile before u taste the macaroons!!
                     </Modal.Title>
                 </Modal.Header>
 
@@ -172,94 +164,20 @@ class FormSignIn extends React.Component {
 
                             <span className="text-light">
                                 {' '}
-                                Degree:
+                                Public key:
 
                                 {' '}
                             </span>
                         </Form.Label>
 
-                        <Form.Select
-                            className="form-control required bg-secondary text-white border-secondary border-1"
-                            onChange={this.handleChangeDegree}
-                            required
-                            value={this.state.degree}
-                        >
-                            <option value="">
-                                ---Select Degree---
-                            </option>
-
-                            <option value="M" >
-                                M-Tech
-                            </option>
-
-                            <option value="B">
-                                B-Tech
-                            </option>
-
-                            <option value="P">
-                                Ph.D.
-                            </option>
-
-                            <option value="F">
-                                Faculty
-                            </option>
-                        </Form.Select>
-
+                        <Form.Control
+                            className="form-control bg-secondary text-white border-secondary border-1"
+                            onChange={this.handleChangePublicKey}
+                            placeholder="name input"
+                            type="text"
+                            value={this.state.publicKey}
+                        />
                         <br />
-
-                        <Form.Label>
-                            <div className="text-danger float-start">
-                                *
-                            </div>
-
-                            <span className="text-light">
-                                {' '}
-                                Course:
-
-                                {' '}
-                            </span>
-                        </Form.Label>
-
-                        <Form.Select
-                            className="form-control required bg-secondary text-white border-secondary border-1"
-                            onChange={this.handleChangeCourse}
-                            required={this.state.course==="B"}
-                            value={this.state.course}
-                        >
-
-                            <option value="">
-                                ---Select Course---
-                            </option>
-
-                            <option value="CSAI">
-                                CSAI
-                            </option>
-
-                            <option value="CSE">
-                                CSE
-                            </option>
-
-                            <option value="CSB">
-                                CSB
-                            </option>
-
-                            <option value="CSD">
-                                CSD
-                            </option>
-
-                            <option value="CSSS">
-                                CSSS
-                            </option>
-
-                            <option value="CSAM">
-                                CSAM
-                            </option>
-
-                            <option value="ECE">
-                                ECE
-                            </option>
-
-                        </Form.Select>
 
                     </Form.Group>
 

@@ -2,6 +2,7 @@
 import React, {useState} from "react";
 import { Navbar, Welcome, Footer, Services, Transactions } from "./components";
 import {authSetLoggedIn} from "./utilities/auth";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     const [loggedIn, _setLoggedIn] = useState((sessionStorage.getItem("loginFlag")));

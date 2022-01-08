@@ -113,8 +113,8 @@ function Welcome() {
                           <div className="flex justify-between items-start">
                               <div className="w-10 h-10 rounded-full border-2 border-white flex justify-center items-center">
                                   <SiEthereum
-                                      fontSize={21}
                                       color="#fff"
+                                      fontSize={21}
                                   />
                               </div>
 
@@ -144,7 +144,7 @@ function Welcome() {
                           type="text"
                       />
 
-                    <Input
+                      <Input
                           handleChange={handleChange}
                           name="markedFor"
                           placeholder="Marked For"
@@ -171,17 +171,25 @@ function Welcome() {
                           placeholder="Enter Message"
                           type="text"
                       />
-                    <label for="expiry" className="py-0 my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism flex flex-row justify-start items-center">
-                        <p className="w-1/4 h-1/2">Expiry:</p> 
-                        {/* <div></div> */}
-                        <Input
-                            handleChange={handleChange}
-                            name="expiry"
-                            placeholder="Enter Expiry Date"
-                            type="date"
-                        />
-                    </label>
-                    
+
+                      <label
+                          className="py-0 my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism flex flex-row justify-start items-center"
+                          htmlFor="expiry"
+                      >
+                          <p className="w-1/4 h-1/2">
+                              Expiry:
+                          </p>
+
+                          {/* <div></div> */}
+
+                          <Input
+                              handleChange={handleChange}
+                              name="expiry"
+                              placeholder="Enter Expiry Date"
+                              type="date"
+                          />
+                      </label>
+
 
                       <div className="h-[1px] w-full bg-gray-400 my-2" />
 
