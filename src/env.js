@@ -1,4 +1,4 @@
-const backend = "http://localhost:8000/";
+const backend = "https://marked-money.herokuapp.com";
 
 export default backend
 
