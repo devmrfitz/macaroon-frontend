@@ -25,14 +25,15 @@ function Welcome() {
   const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading } = useContext(TransactionContext);
 
   const handleSubmit = (e) => {
-    const { addressTo, amount, keyword, message } = formData;
+    const { addressTo, markedFor, amount, keyword, message } = formData;
 
     e.preventDefault();
 
-    if (!addressTo || !amount || !keyword || !message) return;
+    if (!addressTo || !markedFor || !amount || !keyword || !message) return;
 
     axios.post("/app/form/", {
       addressTo,
+      markedFor,
       amount,
       keyword,
       message,
@@ -139,6 +140,13 @@ function Welcome() {
                           handleChange={handleChange}
                           name="addressTo"
                           placeholder="Address To"
+                          type="text"
+                      />
+
+                    <Input
+                          handleChange={handleChange}
+                          name="markedFor"
+                          placeholder="Marked For"
                           type="text"
                       />
 
