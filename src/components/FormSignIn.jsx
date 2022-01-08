@@ -65,7 +65,7 @@ class FormSignIn extends React.Component {
         let payload = {
             First_Name :this.state.FirstName,
             Last_Name :this.state.LastName,
-            publicKey :this.state.publicKey,
+            public_key :this.state.publicKey,
         }
 
         axios.post("app/profile/", payload)
