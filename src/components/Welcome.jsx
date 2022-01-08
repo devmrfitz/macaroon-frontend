@@ -25,7 +25,7 @@ function Welcome() {
   const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading } = useContext(TransactionContext);
 
   const handleSubmit = (e) => {
-    const { addressTo, markedFor, amount, keyword, message } = formData;
+    const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
 
     e.preventDefault();
 
@@ -37,7 +37,8 @@ function Welcome() {
       amount,
       keyword,
       message,
-      addressFrom: currentAccount.address
+      addressFrom: currentAccount.address,
+      expiry
     }).then(() => {
       alert("Transaction sent successfully!");
     }).catch(err => {
@@ -170,6 +171,17 @@ function Welcome() {
                           placeholder="Enter Message"
                           type="text"
                       />
+                    <label for="expiry" className="py-0 my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism flex flex-row justify-start items-center">
+                        <p className="w-1/4 h-1/2">Expiry:</p> 
+                        {/* <div></div> */}
+                        <Input
+                            handleChange={handleChange}
+                            name="expiry"
+                            placeholder="Enter Expiry Date"
+                            type="date"
+                        />
+                    </label>
+                    
 
                       <div className="h-[1px] w-full bg-gray-400 my-2" />
 
