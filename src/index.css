@@ -14,31 +14,42 @@ body {
 }
 
 .gradient-bg-welcome {
-  background-color:#0f0e13;
+  /* background-color:#0f0e13;
   background-image: 
     radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
     radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%); */
+
+  background-color: #41295a;
+  background-image: 
+    radial-gradient(at 0% 0%, hsl(281, 82%, 15%) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
     radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+
+/* background: #41295a;  fallback for old browsers */
+/* background: linear-gradient(to bottom, #2F0743, #41295a);  */
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .gradient-bg-services {
-  background-color:#0f0e13;
+  background-color: #41295a;
   background-image: 
-    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+    radial-gradient(at 0% 0%, hsl(281, 82%, 15%) 0, transparent 50%), 
     radial-gradient(at 50% 100%, hsla(225,39%,25%,1) 0, transparent 50%);
 }
 
 .gradient-bg-transactions {
-  background-color: #0f0e13;
+  background-color: #41295a;
   background-image: 
-    radial-gradient(at 0% 100%, hsla(253,16%,7%,1) 0, transparent 50%), 
+    radial-gradient(at 0% 100%, hsl(281, 82%, 15%) 0, transparent 50%), 
     radial-gradient(at 50% 0%, hsla(225,39%,25%,1) 0, transparent 50%);
 }
 
 .gradient-bg-footer {
-  background-color: #0f0e13;
+  background-color: #41295a;
   background-image: 
-    radial-gradient(at 0% 100%, hsla(253,16%,7%,1) 0, transparent 53%), 
+    radial-gradient(at 0% 100%, hsl(281, 82%, 15%) 0, transparent 53%), 
     radial-gradient(at 50% 150%, hsla(339,49%,30%,1) 0, transparent 50%);
 }
 
@@ -78,6 +89,10 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+
+
+
 
 @tailwind base;
 @tailwind components;
