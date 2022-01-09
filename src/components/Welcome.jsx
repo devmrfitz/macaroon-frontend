@@ -374,7 +374,7 @@ function Welcome({isAuthenticated}) {
                       onClick={handleInteract}
                       type="button"
                   >
-                      Deploy Contract!
+                      Interact with Contract!
                   </button>
               )}
                   </div>
