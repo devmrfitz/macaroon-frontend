@@ -6203,9 +6203,14 @@ resolve@^1.12.0, resolve@^1.20.0:
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.21.0.tgz#b51adc97f3472e6a5cf4444d34bc9d6b9037591f"
   integrity sha512-3wCbTpk5WJlyE4mSOtDLhqQmGFi0/TD9VPwmiolnk8U0wRgMEktqCXd3vy5buTO3tljvalNvKrjHEfrd2WpEKA==
   dependencies:
-    is-core-module "^2.8.0"
-    path-parse "^1.0.7"
-    supports-preserve-symlinks-flag "^1.0.0"
+    is-core-module: ^2.8.0
+    path-parse: ^1.0.7
+    supports-preserve-symlinks-flag: ^1.0.0
+  bin:
+    resolve: bin/resolve
+  checksum: 4bcddee6dbd1b3c64b5d81ee76c1142c4bdfb721f9356554a5a430b9ea3de78f380e02c5bc3000d294350a9087f61457a91a066b3e1695c2462e56c135147798
+  languageName: node
+  linkType: hard
 
 resolve@^2.0.0-next.3:
   version "2.0.0-next.3"
