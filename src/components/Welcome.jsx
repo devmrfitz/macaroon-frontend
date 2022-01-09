@@ -22,7 +22,7 @@ function Input({ placeholder, name, type, value, handleChange }) {
 }
 
 function Welcome() {
-  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading } = useContext(TransactionContext);
+  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading, deployContract } = useContext(TransactionContext);
 
   const handleSubmit = (e) => {
     const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
@@ -46,6 +46,11 @@ function Welcome() {
     });
 
     sendTransaction();
+  };
+
+  const handleDeploy = (e) => {
+    e.preventDefault();
+    deployContract();
   };
 
   return (
@@ -198,12 +203,22 @@ function Welcome() {
               : (
                   <button
                       className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
-                      onClick={handleSubmit}
+                      onClick={handleDeploy}
                       type="button"
                   >
                       Send now
                   </button>
               )}
+              {/* ? <Loader />
+              : (
+                  <button
+                      className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
+                      onClick={handleDeploy}
+                      type="button"
+                  >
+                      Deploy Contract!
+                  </button>
+              )} */}
                   </div>
               </div>
           </div>
