@@ -12,6 +12,7 @@ export const TransactionContext = React.createContext();
 
 const { ethereum } = window;
 
+
 const createEthereumContract = () => {
   const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
@@ -48,11 +49,13 @@ const createContractFactory = () => {
 };
 
 export const TransactionsProvider = ({ children }) => {
-  const [formData, setformData] = useState({ addressTo: "", amount: "", keyword: "", message: "" });
+  const [formData, setformData] = useState({ addressTo: "", amount: "", keyword: "", message: "", markedFor: "" });
   const [currentAccount, setCurrentAccount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [transactionCount, setTransactionCount] = useState(localStorage.getItem("transactionCount"));
   const [transactions, setTransactions] = useState([]);
+
+  let current_contract_address;
 
   const handleChange = (e, name) => {
     setformData((prevState) => ({ ...prevState, [name]: e.target.value }));
@@ -176,15 +179,43 @@ export const TransactionsProvider = ({ children }) => {
   const deployContract = async () => {
     try {
       if (ethereum) {
-    
+        const { addressTo, amount, keyword, message, markedFor } = formData;
+        const parsedAmount = ethers.utils.parseEther(amount);
 
         if(!window.ethereum) {
           console.log("WTF WTF WTF");
         }
 
+        // verify toAdress
+        if(!ethers.utils.isAddress(addressTo)) {
+          console.log("INVALID TO ADDRESS!");
+          alert("INVALID TO ADDRESS!");
+          return;
+        }
+      
+        const thirdParties = markedFor.split(',').map(item => item.trim());
+        console.log(thirdParties);
+
+        // verify third parties
+        if(thirdParties.length == 0) {
+          alert("Need to mark for atleast one address!");
+          return;
+        }
+        let valid_third_parties = true;
+        thirdParties.forEach((addr) => {
+          if(!ethers.utils.isAddress(addr)){
+            valid_third_parties = false;
+          }
+        });
+
+        if(!valid_third_parties) {
+          alert("Invalid marked for addresses!!");
+          return;
+        }
+
+
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        const transactionsContract = new ethers.Contract(contractAddress, contractABI, signer);
         
         // const bytecode = fs.readFileSync('test_contract_sol_Macroon.bin').toString();
         const abi = _abi;
@@ -195,16 +226,29 @@ export const TransactionsProvider = ({ children }) => {
 
         console.log("FACTORY CREATED");
 
-        const senderAdress = await signer.getAddress();
-        console.log("SENDER ADDDDDRRR: " + senderAdress);
+        // const senderAdress = await signer.getAddress();
+        // console.log("SENDER ADDDDDRRR: " + senderAdress);
         
-        var contract = await factory.deploy(senderAdress, 0);
+
+        const contract = await factory.deploy(addressTo, 0, {
+          value: parsedAmount,
+        });
         
         await contract.deployTransaction.wait()
 
         console.log("CONTRACT ADDRESS: " + contract.address);
+        alert("Contract deployed at: " + contract.address);
 
+        // updating global current contract address
+        current_contract_address = contract.address;
+        window.localStorage.setItem("current_contract_address", contract.address);
 
+        const third_party_tx = await contract.addThirdParty(thirdParties);
+        await third_party_tx.wait();
+        console.log("Third Parties Added");
+        alert("Contract marked and fully deployed!");
+
+        
       } else {
         console.log("No ethereum object  HELLLLLLLLO");
       }
@@ -214,6 +258,52 @@ export const TransactionsProvider = ({ children }) => {
       throw new Error("No ethereum object Hell2");
     }
   };
+
+  const interactContract = async () => {
+    try {
+      if (ethereum) {
+        const { addressTo, amount, keyword, message, markedFor } = formData;
+        const parsedAmount = ethers.utils.parseEther(amount);
+
+        if(!window.ethereum) {
+          console.log("WTF WTF WTF");
+        }
+
+        // verify toAdress
+        if(!ethers.utils.isAddress(addressTo)) {
+          console.log("INVALID TO ADDRESS!");
+          alert("INVALID TO ADDRESS!");
+          return;
+        }
+        
+        current_contract_address = localStorage.getItem("current_contract_address");
+
+        console.log(current_contract_address);
+        const abi = _abi;
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(current_contract_address, abi, signer);
+        
+        const senderAdress = await signer.getAddress();
+        console.log("SENDER ADDDDDRRR: " + senderAdress);
+
+        console.log("CONTRACT ADDRESS: " + contract.address);
+
+        
+        const pay_tx = await contract.payMoneyTo(addressTo,  parsedAmount);
+        await pay_tx.wait();
+        console.log("FIRST SENT");
+        
+      } else {
+        console.log("No ethereum object  HELLLLLLLLO");
+      }
+    } catch (error) {
+      console.log(error);
+
+      throw new Error("No ethereum object Hell2");
+    }
+  };
+
 
   useEffect(() => {
     checkIfWalletIsConnect();
@@ -233,6 +323,7 @@ export const TransactionsProvider = ({ children }) => {
         handleChange,
         formData,
         deployContract,
+        interactContract,
       }}
     >
       {children}

@@ -22,7 +22,7 @@ function Input({ placeholder, name, type, value, handleChange }) {
 }
 
 function Welcome() {
-  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading, deployContract } = useContext(TransactionContext);
+  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading, deployContract, interactContract } = useContext(TransactionContext);
 
   const handleSubmit = (e) => {
     const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
@@ -49,9 +49,58 @@ function Welcome() {
   };
 
   const handleDeploy = (e) => {
+    const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
+
     e.preventDefault();
+
+    if (!addressTo || !markedFor || !amount || !keyword || !message) {
+        console.log("Incomplete form, can't deploy!");
+        return;
+    }
+
+    axios.post("/app/form/", {
+        addressTo,
+        markedFor,
+        amount,
+        keyword,
+        message,
+        addressFrom: currentAccount.address,
+        expiry
+    }).then(() => {
+    alert("Transaction form sent successfully!");
+    }).catch(err => {
+    console.log(err);
+    });
+
     deployContract();
   };
+
+  const handleInteract = (e) => {
+    const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
+
+    e.preventDefault();
+
+    if (!addressTo || !amount || !keyword || !message) {
+        console.log("Incomplete form, can't deploy!");
+        return;
+    }
+
+    axios.post("/app/form/", {
+        addressTo,
+        markedFor,
+        amount,
+        keyword,
+        message,
+        addressFrom: currentAccount.address,
+        expiry
+    }).then(() => {
+    alert("Interaction form sent successfully!");
+    }).catch(err => {
+    console.log(err);
+    });
+
+    interactContract();
+  }
 
   return (
       <div className="flex w-full justify-center items-center">
@@ -206,19 +255,20 @@ function Welcome() {
                       onClick={handleDeploy}
                       type="button"
                   >
-                      Send now
+                      Send now(deploy contract)
                   </button>
               )}
-              {/* ? <Loader />
+              {isLoading
+              ? <Loader />
               : (
                   <button
                       className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
-                      onClick={handleDeploy}
+                      onClick={handleInteract}
                       type="button"
                   >
                       Deploy Contract!
                   </button>
-              )} */}
+              )}
                   </div>
               </div>
           </div>
