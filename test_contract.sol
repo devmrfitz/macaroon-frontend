@@ -29,7 +29,7 @@ contract Macroon {
     }
     funder[] public funders;
 
-    constructor(address _spender, uint256 _expiryDate) {
+    constructor(address _spender, uint256 _expiryDate) payable {
         //contract not funded yet. Call fund method in front OR
         //this contract can have += value
         assert(_spender != address(0));
