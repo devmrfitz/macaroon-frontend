@@ -16,7 +16,7 @@ contract Macroon {
     */
 
     //we deploy first and fund later.
-    address private spender;
+    address public spender;
     uint256 private amount;
     uint256 public expiryDate; //it is in UTC
     address payable public deployer; //this the address of the person who deployed the contract
@@ -65,7 +65,7 @@ contract Macroon {
 
     function spendable() public view returns (uint256) {
         //returns amount that can be spent from the contract
-        return amount;
+        return 563;
     }
 
     function addThirdParty(address[] memory addressParty3)
