@@ -176,34 +176,7 @@ export const TransactionsProvider = ({ children }) => {
   const deployContract = async () => {
     try {
       if (ethereum) {
-        // const { addressTo, amount, keyword, message } = formData;
-        // const transactionsContract = createEthereumContract();
-        // const parsedAmount = ethers.utils.parseEther(amount);
-
-        // await ethereum.request({
-        //   method: "eth_sendTransaction",
-        //   params: [{
-        //     from: currentAccount,
-        //     to: addressTo,
-        //     gas: "0x5208",
-        //     value: parsedAmount._hex,
-        //   }],
-        // });
-
-        // const transactionHash = await transactionsContract.addToBlockchain(addressTo, parsedAmount, message, keyword);
-
-        // setIsLoading(true);
-        // console.log(`Loading - ${transactionHash.hash}`);
-        // await transactionHash.wait();
-        // console.log(`Success - ${transactionHash.hash}`);
-        // setIsLoading(false);
-
-        // const transactionsCount = await transactionsContract.getTransactionCount();
-
-        // setTransactionCount(transactionsCount.toNumber());
-        
-
-        // const contract = createContractFactory();
+    
 
         if(!window.ethereum) {
           console.log("WTF WTF WTF");
@@ -222,17 +195,11 @@ export const TransactionsProvider = ({ children }) => {
 
         console.log("FACTORY CREATED");
 
-        // const senderAdress = signer.getAddress();
-        const senderAdress = '0xfe024708B8556F66D18199b2c498F1c93eAb6eA4';
-
-        // var contract = null;
-        // factory.deploy([senderAdress,]).then((c) => { contract = c});
-
-        // var contract = await factory.deploy('0xfe024708B8556F66D18199b2c498F1c93eAb6eA4');
+        const senderAdress = await signer.getAddress();
+        console.log("SENDER ADDDDDRRR: " + senderAdress);
+        
         var contract = await factory.deploy(senderAdress, 0);
-        // console.log("CONTRACT ABI: " + bytecode);
-        // contract.deployTransaction;
-      
+        
         await contract.deployTransaction.wait()
 
         console.log("CONTRACT ADDRESS: " + contract.address);
