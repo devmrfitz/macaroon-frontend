@@ -90,7 +90,7 @@ function Welcome({isAuthenticated}) {
 
     e.preventDefault();
 
-    if (!addressTo || !markedFor || !amount || !keyword || !message) {
+    if (!addressTo || !markedFor || !amount || !message) {
         console.log("Incomplete form, can't deploy!");
         return;
     }
@@ -117,7 +117,7 @@ function Welcome({isAuthenticated}) {
 
     e.preventDefault();
 
-    if (!addressTo || !amount || !keyword || !message) {
+    if (!addressTo || !amount || !message) {
         console.log("Incomplete form, can't deploy!");
         return;
     }
