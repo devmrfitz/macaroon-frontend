@@ -2,7 +2,7 @@
 // Modal to show contacts in a table
 
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Modal,} from "react-bootstrap";
 import { Table } from 'react-bootstrap';
 import {showAlert} from "../common/Toast";
@@ -11,14 +11,21 @@ import axios from "../utilities/axios";
 
 
 export default function ContactsModal(props) {
+
     const {show, onHide} = props;
 
     const [contacts, setContacts] = useState([]);
+    const [contactsFlag, setContactsFlag] = useState(true);
     const [newContact, setNewContact] = useState("");
 
-    axios.get("/app/contacts/list").then(response => {
-        setContacts(response.data);
-    });
+
+    useEffect(() => {
+        if (contactsFlag)
+            axios.get("/app/contacts/list").then(response => {
+                setContacts(response.data);
+                setContactsFlag(false);
+            });
+    })
 
 
     function handleHide() {

@@ -1,7 +1,9 @@
-import React, {useContext, useState} from "react";
+import {Autocomplete, Box, TextField} from "@mui/material";
+import React, {useContext, useEffect, useState} from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { SiEthereum } from "react-icons/si";
 import { BsInfoCircle } from "react-icons/bs";
+import {showAlert} from "../common/Toast";
 
 import { TransactionContext } from "../context/TransactionContext";
 import axios from "../utilities/axios";
@@ -26,12 +28,45 @@ function Welcome({isAuthenticated}) {
   const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading } = useContext(TransactionContext);
   const [modal, setModal] = useState("");
 
+    const [groups, setGroups] = useState([]);
+    const [contactsFlag, setContactsFlag] = useState(true);
+    const [groupsFlag, setGroupsFlag] = useState(true);
+    const [contacts, setContacts] = useState([]);
+
+
+    useEffect(() => {
+        if (groupsFlag)
+            axios.get("/app/group/").then(response => {
+                setGroupsFlag(false);
+                setGroups(response.data.map(group => ({
+                    label: group.name,
+                    value: group.slug,
+                    description: group.description,
+                    // type: "group"
+                })));
+            });
+        if (contactsFlag && isAuthenticated)
+            axios.get("/app/contacts/list").then(response => {
+                setContactsFlag(false);
+                setContacts(response.data.map(contact => ({
+                    label: contact.First_Name + " " + contact.Last_Name,
+                    value: contact.email,
+                    description: "",
+                    // type: "group"
+                })));
+            });
+    })
+
   const handleSubmit = (e) => {
+        console.log("submit triggered")
     const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
 
     e.preventDefault();
 
-    if (!addressTo || !markedFor || !amount || !keyword || !message) return;
+    if (!addressTo || !markedFor || !amount || !message) {
+        showAlert("Please fill all the fields", "error");
+        return;
+    }
 
     axios.post("/app/form/", {
       addressTo,
@@ -83,19 +118,26 @@ function Welcome({isAuthenticated}) {
           )}
 
                   {isAuthenticated && (
-                      <button
-                          className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
-                          onClick={() => setModal("contacts")}
-                          type="button"
-                      >
+                      <>
+                          <button
+                              className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+                              onClick={() => setModal("contacts")}
+                              type="button"
+                          >
 
 
-                          <p className="text-white text-base font-semibold">
-                              Show Contacts
-                          </p>
+                              <p className="text-white text-base font-semibold">
+                                  Show Contacts
+                              </p>
 
-                          <AiFillPlayCircle className="text-white ms-2" />
-                      </button>)}
+                              <AiFillPlayCircle className="text-white ms-2" />
+                          </button>
+
+                          <ContactsModal
+                              onHide={() => setModal("")}
+                              show={modal === "contacts"}
+                          />
+                      </>)}
 
                   <div className="grid sm:grid-cols-3 grid-cols-2 w-full mt-10">
                       <div className={`rounded-tl-2xl ${companyCommonStyles}`}>
@@ -154,18 +196,74 @@ function Welcome({isAuthenticated}) {
                   </div>
 
                   <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
-                      <Input
-                          handleChange={handleChange}
-                          name="addressTo"
-                          placeholder="Address To"
-                          type="text"
+
+                      <Autocomplete
+                          disablePortal
+                          getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
+                          id="combo-box-demo"
+                          onChange={(_, e) => {
+                              handleChange({
+                                  target: {
+                                      value: e.value,
+                                  }
+                              }, "addressTo");
+                          }}
+                          options={contacts}
+                          renderInput={(params) => {
+                              return (
+                                  <TextField
+                                      {...params}
+                                      label="Address To"
+                                      name="addressTo"
+                                      placeholder="Address To"
+                                      variant="standard"
+                                  />);
+                          }}
+                          renderOption={(props, option) => (
+                              <Box
+                                  component="li"
+                                  sx={{'& > img': {mr: 2, flexShrink: 0}}}
+                                  {...props}
+                              >
+                                  {option.label +"\n"+option.value}
+                              </Box>
+                          )}
+                          sx={{width: 300}}
                       />
 
-                      <Input
-                          handleChange={handleChange}
-                          name="markedFor"
-                          placeholder="Marked For"
-                          type="text"
+
+                      <Autocomplete
+                          disablePortal
+                          getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
+                          id="combo-box-demo"
+                          onChange={(_, e) => {
+                              handleChange({
+                                  target: {
+                                      value: e.value,
+                                  }
+                              }, "markedFor");
+                          }}
+                          options={groups.concat(contacts)}
+                          renderInput={(params) => {
+                              return (
+                                  <TextField
+                                      {...params}
+                                      label="Marked For"
+                                      name="markedFor"
+                                      placeholder="Marked For"
+                                      variant="standard"
+                                  />);
+                          }}
+                          renderOption={(props, option) => (
+                              <Box
+                                  component="li"
+                                  sx={{'& > img': {mr: 2, flexShrink: 0}}}
+                                  {...props}
+                              >
+                                  {option.label + "\n" + option.value}
+                              </Box>
+                          )}
+                          sx={{width: 300}}
                       />
 
                       <Input
@@ -173,13 +271,6 @@ function Welcome({isAuthenticated}) {
                           name="amount"
                           placeholder="Amount (ETH)"
                           type="number"
-                      />
-
-                      <Input
-                          handleChange={handleChange}
-                          name="keyword"
-                          placeholder="Keyword (Gif)"
-                          type="text"
                       />
 
                       <Input
@@ -224,10 +315,7 @@ function Welcome({isAuthenticated}) {
                   </div>
               </div>
           </div>
-          <ContactsModal
-              onHide={() => setModal("")}
-              show={modal === "contacts"}
-          />
+
       </div>
   );
 }
