@@ -14,14 +14,16 @@ import ContactsModal from "./ContactsModal";
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
 function Input({ placeholder, name, type, value, handleChange }) {
-  return (<input
-      className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
-      onChange={(e) => handleChange(e, name)}
-      placeholder={placeholder}
-      step="0.0001"
-      type={type}
-      value={value}
-          />)
+  return (
+      <input
+          className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+          onChange={(e) => handleChange(e, name)}
+          placeholder={placeholder}
+          step="0.0001"
+          type={type}
+          value={value}
+      />
+  )
 }
 
 function Welcome({isAuthenticated}) {
@@ -32,6 +34,8 @@ function Welcome({isAuthenticated}) {
     const [contactsFlag, setContactsFlag] = useState(true);
     const [groupsFlag, setGroupsFlag] = useState(true);
     const [contacts, setContacts] = useState([]);
+    const [inputValue, setInputValue] = useState('');
+    const [inputValue2, setInputValue2] = useState('');
 
 
     useEffect(() => {
@@ -39,20 +43,17 @@ function Welcome({isAuthenticated}) {
             axios.get("/app/group/").then(response => {
                 setGroupsFlag(false);
                 setGroups(response.data.map(group => ({
-                    label: group.name,
+                    label: group.slug,
                     value: group.slug,
-                    description: group.description,
-                    // type: "group"
                 })));
             });
         if (contactsFlag && isAuthenticated)
             axios.get("/app/contacts/list").then(response => {
                 setContactsFlag(false);
                 setContacts(response.data.map(contact => ({
-                    label: contact.First_Name + " " + contact.Last_Name,
+                    label: contact.email,
                     value: contact.email,
                     description: "",
-                    // type: "group"
                 })));
             });
     })
@@ -76,8 +77,8 @@ function Welcome({isAuthenticated}) {
         expiry
     }).then((res) => {
     alert("Transaction form sent successfully!");
-    // console.log(res.data)
         let data = res.data;
+
     // convert date to epoch
         if (data.expiry) {
             let date = new Date(data.expiry);
@@ -214,15 +215,19 @@ function Welcome({isAuthenticated}) {
                       <Autocomplete
                           className="my-2 w-100 rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
                           disablePortal
-                          getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
-                          id="combo-box-demo"
+                          freeSolo
                           inputValue={formData.addressTo}
                           onChange={(_, e) => {
+                              setInputValue(e.value);
+                          }}
+                          onInputChange={(event, newInputValue) => {
+                              console.log("newInputValue", newInputValue, event);
                               handleChange({
                                   target: {
-                                      value: e.value,
+                                      value: newInputValue,
                                   }
                               }, "addressTo");
+
                           }}
                           options={contacts}
                           renderInput={(params) => {
@@ -245,22 +250,28 @@ function Welcome({isAuthenticated}) {
                               </Box>
                           )}
                           sx={{width: 300}}
-                          value={formData.addressTo}
+                          value={inputValue}
                       />
 
 
                       <Autocomplete
                           className="my-2 w-100 rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
                           disablePortal
-                          getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
+                          freeSolo
+                          // getOptionLabel={(option) => option.label + " " + option.value}
                           id="combo-box-demo"
-                          inputValue={formData.markedFor}
+                          // inputValue={inputValue2}
                           onChange={(_, e) => {
+                              setInputValue(e.value);
+                          }}
+                          onInputChange={(event, newInputValue) => {
+                              console.log("newInputValue", newInputValue, event);
                               handleChange({
                                   target: {
-                                      value: e.value,
+                                      value: newInputValue,
                                   }
                               }, "markedFor");
+
                           }}
                           options={groups.concat(contacts)}
                           renderInput={(params) => {
@@ -283,7 +294,8 @@ function Welcome({isAuthenticated}) {
                               </Box>
                           )}
                           sx={{width: 300}}
-                          value={formData.markedFor}
+                          inputValue={formData.markedFor}
+                          value={inputValue2}
                       />
 
                       <TextField
