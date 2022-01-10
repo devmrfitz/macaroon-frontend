@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import {showAlert} from "../common/Toast";
 import axios from "../utilities/axios";
 
 import { contractABI, contractAddress } from "../utils/constants";
@@ -208,7 +209,9 @@ export function TransactionsProvider({ children }) {
           value: parsedAmount,
         });
 
-        await contract.deployTransaction.wait()
+        const response = await contract.deployTransaction.wait()
+        console.log("I received ", response)
+
 
         console.log("CONTRACT ADDRESS: " + contract.address);
         alert("Contract deployed at: " + contract.address);
@@ -262,14 +265,23 @@ export function TransactionsProvider({ children }) {
         const signer = provider.getSigner();
         const contract = new ethers.Contract(current_contract_address, abi, signer);
 
-        const senderAdress = await signer.getAddress();
-        console.log("SENDER ADDDDDRRR: " + senderAdress);
+        try {
+          const senderAdress = await signer.getAddress();
+          console.log("SENDER ADDDDDRRR: " + senderAdress);
 
-        console.log("CONTRACT ADDRESS: " + contract.address);
+          console.log("CONTRACT ADDRESS: " + contract.address);
 
 
-        const pay_tx = await contract.payMoneyTo(addressTo,  parsedAmount);
-        await pay_tx.wait();
+          const pay_tx = await contract.payMoneyTo(addressTo, parsedAmount);
+          console.log("pay_tx is ", pay_tx)
+          console.log("interact received ", await pay_tx.wait());
+        }
+        catch (error) {
+          console.log(error);
+          showAlert("Invalid recipient", "error")
+          return;
+        }
+
         const payload = {
           moneyReceiver_public_key: addressTo,
           amount,
