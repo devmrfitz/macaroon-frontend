@@ -150,7 +150,7 @@ export function TransactionsProvider({ children }) {
     }
   };
 
-  const deployContract = async ({addressTo, amount, expiry, message, markedFor, iso_expiry}) => {
+  const deployContract = async ({addressTo, amount, expiry, message, markedFor, iso_expiry, raw}) => {
     try {
       if (ethereum) {
         const parsedAmount = ethers.utils.parseEther(amount);
@@ -224,7 +224,8 @@ export function TransactionsProvider({ children }) {
           contract_address: current_contract_address,
           destination_public_keys: markedFor
         }
-        await axios.post("app/transactions/save/", payload);
+        if (raw===0)
+          await axios.post("app/transactions/save/", payload);
         alert("Contract marked and fully deployed!");
 
 

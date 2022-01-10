@@ -74,7 +74,7 @@ function Welcome({isAuthenticated}) {
         amount,
         message,
         addressFrom: currentAccount.address,
-        expiry
+        expiry,
     }).then((res) => {
     alert("Transaction form sent successfully!");
         let data = res.data;
