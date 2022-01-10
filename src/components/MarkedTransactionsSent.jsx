@@ -1,79 +1,120 @@
-
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Card} from "react-bootstrap";
 import axios from "../utilities/axios";
+import FinalPaymentModal from "./FinalPaymentModal";
 import Loading from "./Loading";
 
-export default function MarkedTransactionsSent() {
-    const [transactions, setTransactions] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
+export default function MarkedTransactionsSent({isAuthenticated}) {
+	const [transactions, setTransactions] = React.useState([]);
+	const [loading, setLoading] = React.useState(true);
+	const [showModal, setShowModal] = React.useState("");
+	const [contactsFlag, setContactsFlag] = useState(true);
+	const [contacts, setContacts] = useState([]);
 
-    useEffect(() => {
-        if (loading)
-            axios.get("/app/transactions/sent/")
-                .then(response => {
-                    setTransactions(response.data);
-                    setLoading(false);
-                })
-    });
 
-    if (loading)
-        return <Loading />
+	useEffect(() => {
+		if (contactsFlag && isAuthenticated)
+			axios.get("/app/contacts/list").then(response => {
+				setContactsFlag(false);
+				setContacts(response.data.map(contact => ({
+					label: contact.First_Name + " " + contact.Last_Name,
+					value: contact.email,
+					description: "",
+					// type: "group"
+				})));
+			});
+	})
 
-    return (
-        <div className=" text-white text-center justfy-center">
-            <h1 className="h1">
-                Marked Transactions Sent
-            </h1>
+	useEffect(() => {
+		if (loading)
+			axios.get("/app/transactions/sent/")
+				.then(response => {
+					setTransactions(response.data);
+					setLoading(false);
+				})
+	});
 
-            <p>
-                This is a list of transactions that you have sent.
-            </p>
+	if (loading)
+		return <Loading />
 
-            <div className="row w-100 m-2 py-2">
-                {transactions.map((transaction) => (
-                    <Card
-                        className="col-auto gradient-bg-transactions text-left"
-                        key={transaction.transaction_id}
-                        style={{"border-color": "white"}}
-                    >
-                        <Card.Header className="transaction-card-header">
-                            <h3 className="h6">
-                                Sender:
-                                {' '}
+	return (
+    <div className=" text-white text-center justfy-center">
+        <h1 className="h1">
+            Marked Currency Created
+        </h1>
 
-                                {transaction.sender_email}
-                            </h3>
+        <p>
+            This is a list of transactions that you have sent.
+        </p>
 
-                            <h3 className="h6">
-                                Amount:
-                                {' '}
+        <div className="row w-100 m-2 p-2">
+            {transactions.map((transaction) => (
+                <Card
+                    className="flex col-auto justify-start text-left items-start white-glassmorphism p-3 m-2 cursor-pointer hover:shadow-xl"
+						// className="col-auto gradient-bg-transactions text-left"
+                    key={transaction.transaction_id}
+                    style={{"border-color": "white"}}
+                >
+                    <Card.Header className="transaction-card-header">
+                        <h3 className="h6">
+                            Intermediary:
+                            {' '}
 
-                                {transaction.amount}
-                            </h3>
-                        </Card.Header>
+                            {transaction.intermediary_email}
+                        </h3>
 
-                        <Card.Body className="transaction-card-body">
-                            <p>
-                                {transaction.message}
-                            </p>
+                        <h3 className="h6">
+                            Amount:
+                            {' '}
 
-                            <p>
-                                Possible destinations:
-                                {" "}
+                            {transaction.amount}
+                        </h3>
+                    </Card.Header>
 
-                                {transaction.destination_email.map((destination) => (
-                                    <span key={destination}>
-                                        {destination}
+                    <Card.Body className="transaction-card-body">
+                        <p>
+                            Message:
+                            {" "}
 
-                                        {', '}
-                                    </span>
-                            ))}
-                            </p>
-                        </Card.Body>
-                    </Card>
-        ))}
-            </div>
+                            {transaction.message}
+                        </p>
+
+                        <p>
+                            Possible destinations:
+                            {" "}
+
+                            {transaction.destination_email.map((destination) => (
+                                <span key={destination}>
+                                    {destination}
+
+                                    {', '}
+                                </span>
+								))}
+                        </p>
+
+                        {/*<div className="w-100 d-flex justify-content-center">
+                            <Button
+                                className="mt-4"
+                                onClick={() => {
+										setShowModal(transaction.contract_address);
+									}}
+                            >
+                                Interact
+                            </Button>
+                        </div>*/}
+
+                        <FinalPaymentModal
+                            contacts={contacts}
+                            contract_address={transaction.contract_address}
+                            setShow={() => {
+									setShowModal("")
+								}}
+                            show={transaction.contract_address === showModal}
+                        />
+                    </Card.Body>
+                </Card>
+				))}
         </div>
-    )
+    </div>
+	)
 }

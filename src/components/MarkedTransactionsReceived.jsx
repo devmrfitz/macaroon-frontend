@@ -41,17 +41,18 @@ export default function MarkedTransactionsReceived({isAuthenticated}) {
     return (
         <div className=" text-white text-center justfy-center">
             <h1 className="h1">
-                Marked Transactions Received
+                Marked Money in account
             </h1>
 
             <p>
-                This is a list of transactions that you have received.
+                This is a list of marked packages/currency that you have received.
             </p>
 
-            <div className="row w-100 m-2 py-2">
+            <div className="row w-100 m-2 p-2">
                 {transactions.map((transaction) => (
                     <Card
-                        className="col-auto gradient-bg-transactions text-left"
+                        className="flex col-auto justify-start text-left items-start white-glassmorphism p-3 m-2 cursor-pointer hover:shadow-xl"
+                        // className="col-auto gradient-bg-transactions text-left"
                         key={transaction.transaction_id}
                         style={{"border-color": "white"}}
                     >
@@ -73,6 +74,9 @@ export default function MarkedTransactionsReceived({isAuthenticated}) {
 
                         <Card.Body className="transaction-card-body">
                             <p>
+                                Message:
+                                {" "}
+
                                 {transaction.message}
                             </p>
 
@@ -89,12 +93,16 @@ export default function MarkedTransactionsReceived({isAuthenticated}) {
                             ))}
                             </p>
 
-                            <Button onClick={()=> {
+                            <div className="w-100 d-flex justify-content-center">
+                                <Button
+                                    className="mt-4"
+                                    onClick={()=> {
                                 setShowModal(transaction.contract_address);
                             }}
-                            >
-                                Interact
-                            </Button>
+                                >
+                                    Interact
+                                </Button>
+                            </div>
 
                             <FinalPaymentModal
                                 contacts={contacts}

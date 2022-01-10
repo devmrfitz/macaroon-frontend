@@ -30,7 +30,7 @@ class FormSignIn extends React.Component {
             LastName:this.props.lastName,
             email: this.props.emailId,
             isLoading: false,
-            publicKey: "",
+            publicKey: window.ethereum.selectedAddress,
             currentModal:true
         }
     }

@@ -14,24 +14,28 @@ import ContactsModal from "./ContactsModal";
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
 function Input({ placeholder, name, type, value, handleChange }) {
-  return (<input
-      className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
-      onChange={(e) => handleChange(e, name)}
-      placeholder={placeholder}
-      step="0.0001"
-      type={type}
-      value={value}
-          />)
+  return (
+      <input
+          className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+          onChange={(e) => handleChange(e, name)}
+          placeholder={placeholder}
+          step="0.0001"
+          type={type}
+          value={value}
+      />
+  )
 }
 
 function Welcome({isAuthenticated}) {
-  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading, deployContract, interactContract } = useContext(TransactionContext);
+  const { currentAccount, connectWallet, handleChange, formData, isLoading, deployContract } = useContext(TransactionContext);
   const [modal, setModal] = useState("");
 
     const [groups, setGroups] = useState([]);
     const [contactsFlag, setContactsFlag] = useState(true);
     const [groupsFlag, setGroupsFlag] = useState(true);
     const [contacts, setContacts] = useState([]);
+    const [inputValue, setInputValue] = useState('');
+    const [inputValue2, setInputValue2] = useState('');
 
 
     useEffect(() => {
@@ -39,20 +43,17 @@ function Welcome({isAuthenticated}) {
             axios.get("/app/group/").then(response => {
                 setGroupsFlag(false);
                 setGroups(response.data.map(group => ({
-                    label: group.name,
+                    label: group.slug,
                     value: group.slug,
-                    description: group.description,
-                    // type: "group"
                 })));
             });
         if (contactsFlag && isAuthenticated)
             axios.get("/app/contacts/list").then(response => {
                 setContactsFlag(false);
                 setContacts(response.data.map(contact => ({
-                    label: contact.First_Name + " " + contact.Last_Name,
+                    label: contact.email,
                     value: contact.email,
                     description: "",
-                    // type: "group"
                 })));
             });
     })
@@ -73,11 +74,10 @@ function Welcome({isAuthenticated}) {
         amount,
         message,
         addressFrom: currentAccount.address,
-        expiry
+        expiry,
     }).then((res) => {
-    alert("Transaction form sent successfully!");
-    // console.log(res.data)
         let data = res.data;
+
     // convert date to epoch
         if (data.expiry) {
             let date = new Date(data.expiry);
@@ -90,30 +90,37 @@ function Welcome({isAuthenticated}) {
             data.iso_expiry = undefined;
         }
     console.log(data);
-        deployContract(data);
+        // check if variable is string
+        if (typeof data.markedFor === "string") {
+            data.markedFor = data.markedFor.split(",");
+            // trim all strings
+            data.markedFor = data.markedFor.map(item => item.trim());
+        }
+    deployContract(data);
     }).catch(err => {
     console.log(err);
     });
 
 
   };
+    console.log(formData);
 
   return (
       <div className="flex w-full justify-center items-center">
           <div className="flex mf:flex-row flex-col items-start justify-between md:p-20 py-12 px-4">
               <div className="flex flex-1 justify-start items-start flex-col mf:mr-10">
                   <h1 className="text-3xl sm:text-5xl text-white text-gradient py-1">
-                      Send Crypto
+                      Purpose-driven
                       {' '}
 
                       <br />
 
                       {' '}
-                      across the world
+                      money for everybody
                   </h1>
 
                   <p className="text-left mt-5 text-white font-light md:w-9/12 w-11/12 text-base">
-                      Explore the crypto world. Buy and sell cryptocurrencies easily on Krypto.
+                      Securely transfer purpose-driven money across the world
                   </p>
 
                   {!currentAccount && (
@@ -211,15 +218,21 @@ function Welcome({isAuthenticated}) {
                   <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
 
                       <Autocomplete
+                          className="my-2 w-100 rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
                           disablePortal
-                          getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
-                          id="combo-box-demo"
+                          freeSolo
+                          inputValue={formData.addressTo}
                           onChange={(_, e) => {
+                              setInputValue(e.value);
+                          }}
+                          onInputChange={(event, newInputValue) => {
+                              console.log("newInputValue", newInputValue, event);
                               handleChange({
                                   target: {
-                                      value: e.value,
+                                      value: newInputValue,
                                   }
                               }, "addressTo");
+
                           }}
                           options={contacts}
                           renderInput={(params) => {
@@ -242,20 +255,28 @@ function Welcome({isAuthenticated}) {
                               </Box>
                           )}
                           sx={{width: 300}}
-                          // value={formData.addressTo}
+                          value={inputValue}
                       />
 
 
                       <Autocomplete
+                          className="my-2 w-100 rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
                           disablePortal
-                          getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
+                          freeSolo
+                          // getOptionLabel={(option) => option.label + " " + option.value}
                           id="combo-box-demo"
+                          // inputValue={inputValue2}
                           onChange={(_, e) => {
+                              setInputValue2(e.value);
+                          }}
+                          onInputChange={(event, newInputValue) => {
+                              console.log("newInputValue", newInputValue, event);
                               handleChange({
                                   target: {
-                                      value: e.value,
+                                      value: newInputValue,
                                   }
                               }, "markedFor");
+
                           }}
                           options={groups.concat(contacts)}
                           renderInput={(params) => {
@@ -278,23 +299,27 @@ function Welcome({isAuthenticated}) {
                               </Box>
                           )}
                           sx={{width: 300}}
-                          // value={formData.markedFor}
+                          inputValue={formData.markedFor}
+                          value={inputValue2}
                       />
 
-                      <Input
-                          handleChange={handleChange}
-                          name="amount"
-                          placeholder="Amount (ETH)"
+                      <TextField
+                          className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+                          onChange={(e) => handleChange(e, "amount")}
+                          placeholder="Amount"
+                          step="0.0001"
                           type="number"
                           value={formData.amount}
+                          variant="standard"
                       />
 
-                      <Input
-                          handleChange={handleChange}
-                          name="message"
-                          placeholder="Enter Message"
+                      <TextField
+                          className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+                          onChange={(e) => handleChange(e, "message")}
+                          placeholder="Message"
                           type="text"
                           value={formData.message}
+                          variant="standard"
                       />
 
                       <label
@@ -321,11 +346,11 @@ function Welcome({isAuthenticated}) {
               ? <Loader />
               : (
                   <button
-                      className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
+                      className="text-white text-center w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
                       onClick={handleDeploy}
                       type="button"
                   >
-                      Send marked money now(deploy contract)
+                      Send Marked Money
                   </button>
               )}
 

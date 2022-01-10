@@ -91,22 +91,27 @@ export default function FinalPaymentModal({contacts, show, setShow, contract_add
                             </Box>
                       )}
                         sx={{width: 300}}
+                        className="my-2 w-100 rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+
                     />
 
-                    <Input
-                        handleChange={handleChange}
-                        name="amount"
-                        placeholder="Amount (ETH)"
+                    <TextField
+                        className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+                        onChange={(e) => handleChange(e, "amount")}
+                        placeholder="Amount"
+                        step="0.0001"
                         type="number"
                         value={formData.amount}
+                        variant="standard"
                     />
 
-                    <Input
-                        handleChange={handleChange}
-                        name="message"
-                        placeholder="Enter Message"
+                    <TextField
+                        className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+                        onChange={(e) => handleChange(e, "message")}
+                        placeholder="Message"
                         type="text"
                         value={formData.message}
+                        variant="standard"
                     />
 
 
@@ -133,7 +138,7 @@ export default function FinalPaymentModal({contacts, show, setShow, contract_add
                         }
                         );}}
                 >
-                    Submit Payment
+                    Pay Now
                 </Button>
             </Modal.Footer>
         </Modal>

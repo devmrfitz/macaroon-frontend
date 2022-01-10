@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import {showAlert} from "../common/Toast";
 import axios from "../utilities/axios";
-
+import MetaMaskOnboarding from '@metamask/onboarding';
 import { contractABI, contractAddress } from "../utils/constants";
 
 import { _abi }from "./abiConstants";
@@ -64,7 +65,7 @@ export function TransactionsProvider({ children }) {
 
   const checkIfWalletIsConnect = async () => {
     try {
-      if (!ethereum) return alert("Please install MetaMask.");
+      if (!ethereum) return; // alert("Please install MetaMask.");
 
       const accounts = await ethereum.request({ method: "eth_accounts" });
       console.log("CHECK IF WALLERY IS CONNNNNNNNN");
@@ -97,7 +98,12 @@ export function TransactionsProvider({ children }) {
 
   const connectWallet = async () => {
     try {
-      if (!ethereum) return alert("Please install MetaMask.");
+      if (!ethereum) {
+        const onboarding = new MetaMaskOnboarding({
+          forwarderOrigin: "https://macaroon.web.app",
+        });
+        onboarding.startOnboarding();
+      }
 
       const accounts = await ethereum.request({ method: "eth_requestAccounts", });
 
@@ -150,7 +156,7 @@ export function TransactionsProvider({ children }) {
     }
   };
 
-  const deployContract = async ({addressTo, amount, expiry, message, markedFor, iso_expiry}) => {
+  const deployContract = async ({addressTo, amount, expiry, message, markedFor, iso_expiry, raw}) => {
     try {
       if (ethereum) {
         const parsedAmount = ethers.utils.parseEther(amount);
@@ -208,7 +214,9 @@ export function TransactionsProvider({ children }) {
           value: parsedAmount,
         });
 
-        await contract.deployTransaction.wait()
+        const response = await contract.deployTransaction.wait()
+        console.log("I received ", response)
+
 
         console.log("CONTRACT ADDRESS: " + contract.address);
         alert("Contract deployed at: " + contract.address);
@@ -224,8 +232,9 @@ export function TransactionsProvider({ children }) {
           contract_address: current_contract_address,
           destination_public_keys: markedFor
         }
-        await axios.post("app/transactions/save/", payload);
-        alert("Contract marked and fully deployed!");
+        if (raw===0)
+          await axios.post("app/transactions/save/", payload);
+        showAlert("Contract marked and fully deployed!", "success");
 
 
       } else {
@@ -261,20 +270,31 @@ export function TransactionsProvider({ children }) {
         const signer = provider.getSigner();
         const contract = new ethers.Contract(current_contract_address, abi, signer);
 
-        const senderAdress = await signer.getAddress();
-        console.log("SENDER ADDDDDRRR: " + senderAdress);
+        try {
+          const senderAdress = await signer.getAddress();
+          console.log("SENDER ADDDDDRRR: " + senderAdress);
 
-        console.log("CONTRACT ADDRESS: " + contract.address);
+          console.log("CONTRACT ADDRESS: " + contract.address);
 
 
-        const pay_tx = await contract.payMoneyTo(addressTo,  parsedAmount);
-        await pay_tx.wait();
+          const pay_tx = await contract.payMoneyTo(addressTo, parsedAmount);
+          console.log("pay_tx is ", pay_tx)
+          console.log("interact received ", await pay_tx.wait());
+        }
+        catch (error) {
+          console.log(error);
+          showAlert("Invalid recipient", "error")
+          return;
+        }
+
         const payload = {
           moneyReceiver_public_key: addressTo,
           amount,
-          message
+          message,
+          current_contract_address,
         }
         await axios.post("app/payments/save/", payload)
+        showAlert("Payment sent", "success")
         console.log("FIRST SENT");
 
       } else {
