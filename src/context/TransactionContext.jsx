@@ -199,11 +199,12 @@ export function TransactionsProvider({ children }) {
 
         console.log("FACTORY CREATED");
 
-        // const senderAdress = await signer.getAddress();
+        const senderAdrress = await signer.getAddress();
         // console.log("SENDER ADDDDDRRR: " + senderAdress);
 
-
-        const contract = await factory.deploy(addressTo, 0, {
+        console.log("CONTRACT DEPLOY ARGS: ", addressTo, expiry, message, senderAdrress, thirdParties);
+        const contract = await factory.deploy(addressTo, expiry, message, senderAdrress, thirdParties
+        , {
           value: parsedAmount,
         });
 
@@ -224,10 +225,6 @@ export function TransactionsProvider({ children }) {
           destination_public_keys: markedFor
         }
         await axios.post("app/transactions/save/", payload);
-
-        const third_party_tx = await contract.addThirdParty(thirdParties);
-        await third_party_tx.wait();
-        console.log("Third Parties Added");
         alert("Contract marked and fully deployed!");
 
 

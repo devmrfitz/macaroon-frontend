@@ -6,7 +6,18 @@
     {
       "inputs": [
         { "internalType": "address", "name": "_spender", "type": "address" },
-        { "internalType": "uint256", "name": "_expiryDate", "type": "uint256" }
+        { "internalType": "uint256", "name": "_expiryDate", "type": "uint256" },
+        { "internalType": "string", "name": "_remarks", "type": "string" },
+        {
+          "internalType": "bool",
+          "name": "_sendToOwnerOnExpire",
+          "type": "bool"
+        },
+        {
+          "internalType": "address[]",
+          "name": "addressParty3",
+          "type": "address[]"
+        }
       ],
       "stateMutability": "payable",
       "type": "constructor"
@@ -27,13 +38,6 @@
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "name": "addressPayable",
-      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "deployer",
       "outputs": [
@@ -46,14 +50,7 @@
       "inputs": [],
       "name": "expiredContractRefund",
       "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "expiryDate",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -66,12 +63,25 @@
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "name": "funders",
+      "inputs": [],
+      "name": "getAllPayable",
       "outputs": [
-        { "internalType": "address", "name": "whoFunded", "type": "address" },
-        { "internalType": "uint256", "name": "amountFunded", "type": "uint256" }
+        { "internalType": "address[]", "name": "", "type": "address[]" }
       ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getExpiryOfContract",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getRemarks",
+      "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
       "stateMutability": "view",
       "type": "function"
     },
@@ -95,20 +105,27 @@
       "outputs": [
         { "internalType": "bool", "name": "success", "type": "bool" }
       ],
-      "stateMutability": "payable",
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "name": "payableOrNot",
+      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "sendToOwnerOnExpire",
+      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "spendable",
       "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "spender",
-      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
       "stateMutability": "view",
       "type": "function"
     }
