@@ -22,34 +22,7 @@ const createEthereumContract = () => {
   return transactionsContract;
 };
 
-const createContractFactory = () => {
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
-  const transactionsContract = new ethers.Contract(contractAddress, contractABI, signer);
-
-  // const bytecode = fs.readFileSync('test_contract_sol_Macroon.bin').toString();
-  const abi = _abi;
-  console.log("CONTRACT ABI: " + abi);
-  console.log("CONTRACT ABI: " + bytecode);
-
-  const factory = new ethers.ContractFactory(abi, bytecode, signer);
-
-  const senderAdress = signer.getAddress();
-
-  // var contract = null;
-  // factory.deploy([senderAdress,]).then((c) => { contract = c});
-
-  var contract =  factory.deploy([senderAdress,]);
-
-   contract.deployContract.wait();
-
-  console.log("CONTRACT ADDRESS" + contract.address);
-
-
-  return contract;
-};
-
-export const TransactionsProvider = ({ children }) => {
+export function TransactionsProvider({ children }) {
   const [formData, setformData] = useState({ addressTo: "", amount: "", keyword: "", message: "", markedFor: "" });
   const [currentAccount, setCurrentAccount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -321,8 +294,8 @@ export const TransactionsProvider = ({ children }) => {
   }, [transactionCount]);
 
   return (
-    <TransactionContext.Provider
-      value={{
+      <TransactionContext.Provider
+          value={{
         transactionCount,
         connectWallet,
         transactions,
@@ -334,8 +307,8 @@ export const TransactionsProvider = ({ children }) => {
         deployContract,
         interactContract,
       }}
-    >
-      {children}
-    </TransactionContext.Provider>
+      >
+          {children}
+      </TransactionContext.Provider>
   );
-};
+}
