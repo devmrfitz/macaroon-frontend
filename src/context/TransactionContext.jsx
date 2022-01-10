@@ -274,7 +274,7 @@ export function TransactionsProvider({ children }) {
           moneyReceiver_public_key: addressTo,
           amount,
           message,
-          contract_address: current_contract_address,
+          current_contract_address,
         }
         await axios.post("app/payments/save/", payload)
         console.log("FIRST SENT");
