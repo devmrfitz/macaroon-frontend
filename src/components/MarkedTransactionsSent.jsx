@@ -40,7 +40,7 @@ export default function MarkedTransactionsSent({isAuthenticated}) {
 	return (
     <div className=" text-white text-center justfy-center">
         <h1 className="h1">
-            Marked Transactions Sent
+            Marked Currency Created
         </h1>
 
         <p>

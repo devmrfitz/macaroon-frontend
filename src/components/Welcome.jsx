@@ -111,17 +111,17 @@ function Welcome({isAuthenticated}) {
           <div className="flex mf:flex-row flex-col items-start justify-between md:p-20 py-12 px-4">
               <div className="flex flex-1 justify-start items-start flex-col mf:mr-10">
                   <h1 className="text-3xl sm:text-5xl text-white text-gradient py-1">
-                      Securely transfer
+                      Purpose-driven
                       {' '}
 
                       <br />
 
                       {' '}
-                      across the world
+                      money for everybody
                   </h1>
 
                   <p className="text-left mt-5 text-white font-light md:w-9/12 w-11/12 text-base">
-                      Explore the crypto world. Buy and sell cryptocurrencies easily on Krypto.
+                      Securely transfer purpose-driven money across the world
                   </p>
 
                   {!currentAccount && (
@@ -347,11 +347,11 @@ function Welcome({isAuthenticated}) {
               ? <Loader />
               : (
                   <button
-                      className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
+                      className="text-white text-center w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
                       onClick={handleDeploy}
                       type="button"
                   >
-                      Send marked money now(deploy contract)
+                      Send Marked Money
                   </button>
               )}
 

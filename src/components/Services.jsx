@@ -4,7 +4,7 @@ import { BiSearchAlt } from "react-icons/bi";
 import { RiHeart2Fill } from "react-icons/ri";
 
 function ServiceCard({ color, title, icon, subtitle }) {
-  return (<div className="flex flex-row justify-start items-start white-glassmorphism p-3 m-2 cursor-pointer hover:shadow-xl">
+  return (<div className="flex flex-row justify-start items-start white-glassmorphism p-3 m-2 cursor-pointer hover:shadow-xl w-full">
       <div className={`w-10 h-10 rounded-full flex justify-center items-center ${color}`}>
           {icon}
       </div>
@@ -26,14 +26,13 @@ function Services() {
       <div className="flex mf:flex-row flex-col items-center justify-between md:p-20 py-12 px-4">
           <div className="flex-1 flex flex-col justify-start items-start">
               <h1 className="text-white text-3xl sm:text-5xl py-2 text-gradient ">
-                  Services that we
+                  The beauty
                   <br />
-                  continue to improve
+                  of blockchain
               </h1>
 
               <p className="text-left my-2 text-white font-light md:w-9/12 w-11/12 text-base">
-                  The best choice for buying and selling your crypto assets, with the
-                  various super friendly services we offer
+                  We use blockchain powered transactions with improved security, complete transparency and full control over the money you spend
               </p>
           </div>
 
@@ -44,8 +43,8 @@ function Services() {
                       className="text-white"
                       fontSize={21}
                         />}
-                  subtitle="Security is guranteed. We always maintain privacy and maintain the quality of our products"
-                  title="Security gurantee"
+                  subtitle="Trust no-one but the code"
+                  title="Security guarantee"
               />
 
               <ServiceCard
@@ -54,8 +53,8 @@ function Services() {
                       className="text-white"
                       fontSize={21}
                         />}
-                  subtitle="Security is guranteed. We always maintain privacy and maintain the quality of our products"
-                  title="Best exchange rates"
+                  subtitle="Don't know much about crypto? No problem"
+                  title="No hassles"
               />
 
               <ServiceCard
@@ -64,8 +63,8 @@ function Services() {
                       className="text-white"
                       fontSize={21}
                         />}
-                  subtitle="Security is guranteed. We always maintain privacy and maintain the quality of our products"
-                  title="Fastest transactions"
+                  subtitle="Your transactions outlive Macaroon"
+                  title="0 downtime, literally"
               />
           </div>
       </div>
