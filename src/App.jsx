@@ -1,7 +1,7 @@
 
 import {createTheme, ThemeProvider} from "@mui/material";
 import React, {useState} from "react";
-import { Navbar, Welcome, } from "./components";
+import {Navbar, Services, Welcome,} from "./components";
 import MarkedTransactionsReceived from "./components/MarkedTransactionsReceived";
 import MarkedTransactionsSent from "./components/MarkedTransactionsSent";
 import {authSetLoggedIn} from "./utilities/auth";
@@ -39,7 +39,7 @@ function App() {
                   />
               </div>
 
-              {loggedIn && (
+              {loggedIn? (
                   <div className="row gradient-bg-transactions">
 
                       <div className="col-12 col-md-6 my-3">
@@ -53,9 +53,9 @@ function App() {
                       </div>
 
 
-                  </div>)}
+                  </div>): <Services />}
 
-              {/*<Services />*/}
+
 
               {/*<Footer />*/}
           </div>
