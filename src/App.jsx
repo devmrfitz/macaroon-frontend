@@ -1,7 +1,7 @@
 
 import {createTheme, ThemeProvider} from "@mui/material";
 import React, {useState} from "react";
-import { Navbar, Welcome, Footer, Services, Transactions } from "./components";
+import { Navbar, Welcome, } from "./components";
 import MarkedTransactionsReceived from "./components/MarkedTransactionsReceived";
 import MarkedTransactionsSent from "./components/MarkedTransactionsSent";
 import {authSetLoggedIn} from "./utilities/auth";

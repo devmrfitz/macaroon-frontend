@@ -25,7 +25,7 @@ function Input({ placeholder, name, type, value, handleChange }) {
 }
 
 function Welcome({isAuthenticated}) {
-  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading, deployContract, interactContract } = useContext(TransactionContext);
+  const { currentAccount, connectWallet, handleChange, formData, isLoading, deployContract } = useContext(TransactionContext);
   const [modal, setModal] = useState("");
 
     const [groups, setGroups] = useState([]);
@@ -97,6 +97,7 @@ function Welcome({isAuthenticated}) {
 
 
   };
+    console.log(formData);
 
   return (
       <div className="flex w-full justify-center items-center">
@@ -214,6 +215,7 @@ function Welcome({isAuthenticated}) {
                           disablePortal
                           getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
                           id="combo-box-demo"
+                          inputValue={formData.addressTo}
                           onChange={(_, e) => {
                               handleChange({
                                   target: {
@@ -250,6 +252,7 @@ function Welcome({isAuthenticated}) {
                           disablePortal
                           getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
                           id="combo-box-demo"
+                          inputValue={formData.markedFor}
                           onChange={(_, e) => {
                               handleChange({
                                   target: {

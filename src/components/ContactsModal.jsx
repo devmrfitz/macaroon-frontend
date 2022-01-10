@@ -2,10 +2,11 @@
 // Modal to show contacts in a table
 
 
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Button, Modal,} from "react-bootstrap";
 import { Table } from 'react-bootstrap';
 import {showAlert} from "../common/Toast";
+import {TransactionContext} from "../context/TransactionContext";
 
 import axios from "../utilities/axios";
 
@@ -13,6 +14,8 @@ import axios from "../utilities/axios";
 export default function ContactsModal(props) {
 
     const {show, onHide} = props;
+    const { handleChange } = useContext(TransactionContext);
+
 
     const [contacts, setContacts] = useState([]);
     const [contactsFlag, setContactsFlag] = useState(true);
@@ -76,7 +79,14 @@ export default function ContactsModal(props) {
                         <td>
                             <a
                                 className="text-primary"
-                                href="#"
+                                onClick={() => {
+                                    handleChange({
+                                        target :{
+                                            value: contact.email
+                                        }
+                                    }, "addressTo");
+                                    handleHide();
+                                }}
                             >
                                 Send money
                             </a>
@@ -109,6 +119,7 @@ export default function ContactsModal(props) {
         <Modal
             aria-labelledby="contained-modal-title-lg"
             bsSize="large"
+            dialogClassName="mw-100 w-75"
             onHide={handleHide}
             show={show}
         >
