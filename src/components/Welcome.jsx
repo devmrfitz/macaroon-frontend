@@ -57,34 +57,6 @@ function Welcome({isAuthenticated}) {
             });
     })
 
-  const handleSubmit = (e) => {
-        console.log("submit triggered")
-    const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
-
-    e.preventDefault();
-
-    if (!addressTo || !markedFor || !amount || !message) {
-        showAlert("Please fill all the fields", "error");
-        return;
-    }
-
-    axios.post("/app/form/", {
-      addressTo,
-      markedFor,
-      amount,
-      keyword,
-      message,
-      addressFrom: currentAccount.address,
-      expiry
-    }).then(() => {
-      alert("Transaction sent successfully!");
-    }).catch(err => {
-      console.log(err);
-    });
-
-    sendTransaction();
-  };
-
   const handleDeploy = (e) => {
     const { addressTo, markedFor, amount, message, expiry } = formData;
 
@@ -125,33 +97,6 @@ function Welcome({isAuthenticated}) {
 
 
   };
-
-  const handleInteract = (e) => {
-    const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
-
-    e.preventDefault();
-
-    if (!addressTo || !amount || !message) {
-        console.log("Incomplete form, can't deploy!");
-        return;
-    }
-
-    axios.post("/app/form/", {
-        addressTo,
-        markedFor,
-        amount,
-        keyword,
-        message,
-        addressFrom: currentAccount.address,
-        expiry
-    }).then(() => {
-    alert("Interaction form sent successfully!");
-    }).catch(err => {
-    console.log(err);
-    });
-
-    interactContract();
-  }
 
   return (
       <div className="flex w-full justify-center items-center">

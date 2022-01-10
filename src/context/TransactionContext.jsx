@@ -268,24 +268,22 @@ export const TransactionsProvider = ({ children }) => {
     }
   };
 
-  const interactContract = async () => {
-    try {
+  const interactContract = async ({addressTo, amount, message, contract_address}) => {
       if (ethereum) {
-        const { addressTo, amount, keyword, message, markedFor } = formData;
         const parsedAmount = ethers.utils.parseEther(amount);
 
         if(!window.ethereum) {
           console.log("WTF WTF WTF");
         }
 
-        // verify toAdress
+        // verify toAddress
         if(!ethers.utils.isAddress(addressTo)) {
           console.log("INVALID TO ADDRESS!");
           alert("INVALID TO ADDRESS!");
           return;
         }
 
-        current_contract_address = localStorage.getItem("current_contract_address");
+        current_contract_address = contract_address;
 
         console.log(current_contract_address);
         const abi = _abi;
@@ -301,16 +299,18 @@ export const TransactionsProvider = ({ children }) => {
 
         const pay_tx = await contract.payMoneyTo(addressTo,  parsedAmount);
         await pay_tx.wait();
+        const payload = {
+          moneyReceiver_public_key: addressTo,
+          amount,
+          message
+        }
+        await axios.post("app/payments/save/", payload)
         console.log("FIRST SENT");
 
       } else {
         console.log("No ethereum object  HELLLLLLLLO");
       }
-    } catch (error) {
-      console.log(error);
 
-      throw new Error("No ethereum object Hell2");
-    }
   };
 
 

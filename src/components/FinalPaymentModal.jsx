@@ -2,9 +2,10 @@
 
 
 import {Autocomplete, Box, TextField} from "@mui/material";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import { Modal, Button } from 'react-bootstrap';
 import {TransactionContext} from "../context/TransactionContext";
+import axios from "../utilities/axios";
 
 function Input({placeholder, name, type, value, handleChange}) {
     return (<input
@@ -18,12 +19,22 @@ function Input({placeholder, name, type, value, handleChange}) {
 }
 
 export default function FinalPaymentModal({contacts, show, setShow, contract_address}) {
+
     const {
-        handleChange,
-        formData,
+        interactContract,
     } = useContext(TransactionContext);
 
+    const [formData, setformData] = useState({addressTo: "", amount: "", message: "", });
+
+    const handleChange = (e, name) => {
+        setformData((prevState) => ({...prevState, [name]: e.target.value}));
+    };
+
     console.log(contract_address)
+
+    const addressTo = formData.addressTo;
+    const amount = formData.amount;
+    const message = formData.message;
 
     return (
         <Modal
@@ -108,7 +119,20 @@ export default function FinalPaymentModal({contacts, show, setShow, contract_add
             <Modal.Footer
                 className=" gradient-bg-transactions  text-white"
             >
-                <Button bsStyle="primary">
+                <Button
+                    bsStyle="primary"
+                    onClick={() => {
+
+                        axios.post("/app/form/", {
+                            addressTo,
+                            markedFor: [],
+                        }).then((res) => {
+                            const addressTo = res.data.addressTo;
+                            console.log("passing", contract_address, message, addressTo.trim(), amount.toString());
+                            interactContract({contract_address, message, addressTo, amount});
+                        }
+                        );}}
+                >
                     Submit Payment
                 </Button>
             </Modal.Footer>
