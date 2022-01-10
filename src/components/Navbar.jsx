@@ -1,13 +1,17 @@
 import React, {useState} from "react";
+import {Button} from "react-bootstrap";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 
 import logo from "../../images/logo.png";
 import GoogleSignIn from "./GoogleSignIn";
 
-function NavBarItem({ title, classprops }) {
+function NavBarItem({ title, classprops, onClick }) {
   return (
-      <li className={`mx-4 cursor-pointer ${classprops}`}>
+      <li
+          className={`mx-4 cursor-pointer ${classprops}`}
+          onClick={onClick}
+      >
           {title}
       </li>)
 }
@@ -28,12 +32,8 @@ function Navbar({isAuthenticated, setLoggedIn}) {
           </div>
 
           <ul className="text-white md:flex hidden list-none flex-row justify-between items-center flex-initial">
-              {/*<NavBarItem*/}
-              {/*    classprops="my-2 text-lg"*/}
-              {/*    title={"Payments received"}*/}
-              {/*/>*/}
 
-              <li className="">
+              {(!isAuthenticated)?(
                   <GoogleSignIn
                       isAuthenticated={isAuthenticated}
                       setLoggedIn={setLoggedIn}
@@ -41,7 +41,20 @@ function Navbar({isAuthenticated, setLoggedIn}) {
                       stage={googleState}
                       visibility
                   />
-              </li>
+              ):(
+
+                  <Button
+                      className="rounded-lg"
+                      onClick={() => {
+                  sessionStorage.clear();
+                  window.location.reload();
+              }}
+                      title="SignOut"
+                      variant="dark"
+                  >
+                      SignOut
+                  </Button>)}
+
           </ul>
 
           <div className="flex relative">
@@ -71,8 +84,11 @@ function Navbar({isAuthenticated, setLoggedIn}) {
                   </li>
 
                   {/*<NavBarItem*/}
+
                   {/*    classprops="my-2 text-lg"*/}
+
                   {/*    title={"Payments received"}*/}
+
                   {/*/>*/}
               </ul>
         )}
