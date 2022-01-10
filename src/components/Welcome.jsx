@@ -262,7 +262,7 @@ function Welcome({isAuthenticated}) {
                           id="combo-box-demo"
                           // inputValue={inputValue2}
                           onChange={(_, e) => {
-                              setInputValue(e.value);
+                              setInputValue2(e.value);
                           }}
                           onInputChange={(event, newInputValue) => {
                               console.log("newInputValue", newInputValue, event);
