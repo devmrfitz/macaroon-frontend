@@ -40,7 +40,7 @@ function App() {
               </div>
 
               {loggedIn? (
-                  <div className="row gradient-bg-transactions">
+                  <div className="row">
 
                       <div className="col-12 col-md-6 my-3">
                           <MarkedTransactionsSent />
