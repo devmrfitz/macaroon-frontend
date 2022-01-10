@@ -91,6 +91,12 @@ function Welcome({isAuthenticated}) {
             data.iso_expiry = undefined;
         }
     console.log(data);
+        // check if variable is string
+        if (typeof data.markedFor === "string") {
+            data.markedFor = data.markedFor.split(",");
+            // trim all strings
+            data.markedFor = data.markedFor.map(item => item.trim());
+        }
     deployContract(data);
     }).catch(err => {
     console.log(err);
