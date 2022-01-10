@@ -46,7 +46,9 @@ function App() {
                       </div>
 
                       <div className="col-12 col-md-6 my-3">
-                          <MarkedTransactionsReceived />
+                          <MarkedTransactionsReceived
+                              isAuthenticated={loggedIn}
+                          />
                       </div>
 
 

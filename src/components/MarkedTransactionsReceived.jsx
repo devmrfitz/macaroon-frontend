@@ -1,12 +1,30 @@
 
-import React, {useEffect} from "react";
-import {Card} from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {Button, Card} from "react-bootstrap";
 import axios from "../utilities/axios";
+import FinalPaymentModal from "./FinalPaymentModal";
 import Loading from "./Loading";
 
-export default function MarkedTransactionsReceived() {
+export default function MarkedTransactionsReceived({isAuthenticated}) {
     const [transactions, setTransactions] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
+    const [showModal, setShowModal] = React.useState("");
+    const [contactsFlag, setContactsFlag] = useState(true);
+    const [contacts, setContacts] = useState([]);
+
+
+    useEffect(() => {
+        if (contactsFlag && isAuthenticated)
+            axios.get("/app/contacts/list").then(response => {
+                setContactsFlag(false);
+                setContacts(response.data.map(contact => ({
+                    label: contact.First_Name + " " + contact.Last_Name,
+                    value: contact.email,
+                    description: "",
+                    // type: "group"
+                })));
+            });
+    })
 
     useEffect(() => {
         if (loading)
@@ -70,6 +88,20 @@ export default function MarkedTransactionsReceived() {
                                     </span>
                             ))}
                             </p>
+
+                            <Button onClick={()=> {
+                                setShowModal(transaction.contract_address);
+                            }}
+                            >
+                                Interact
+                            </Button>
+
+                            <FinalPaymentModal
+                                contacts={contacts}
+                                contract_address={transaction.contract_address}
+                                setShow={() => {setShowModal("")}}
+                                show={transaction.contract_address === showModal}
+                            />
                         </Card.Body>
                     </Card>
         ))}
