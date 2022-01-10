@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import axios from "../utilities/axios";
 
 import { contractABI, contractAddress } from "../utils/constants";
 
@@ -21,34 +22,7 @@ const createEthereumContract = () => {
   return transactionsContract;
 };
 
-const createContractFactory = () => {
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
-  const transactionsContract = new ethers.Contract(contractAddress, contractABI, signer);
-  
-  // const bytecode = fs.readFileSync('test_contract_sol_Macroon.bin').toString();
-  const abi = _abi;
-  console.log("CONTRACT ABI: " + abi);
-  console.log("CONTRACT ABI: " + bytecode);
-
-  const factory = new ethers.ContractFactory(abi, bytecode, signer);
-
-  const senderAdress = signer.getAddress();
-
-  // var contract = null;
-  // factory.deploy([senderAdress,]).then((c) => { contract = c});
-
-  var contract =  factory.deploy([senderAdress,]);
-
-   contract.deployContract.wait();
-
-  console.log("CONTRACT ADDRESS" + contract.address);
-
-
-  return contract;
-};
-
-export const TransactionsProvider = ({ children }) => {
+export function TransactionsProvider({ children }) {
   const [formData, setformData] = useState({ addressTo: "", amount: "", keyword: "", message: "", markedFor: "" });
   const [currentAccount, setCurrentAccount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -176,10 +150,9 @@ export const TransactionsProvider = ({ children }) => {
     }
   };
 
-  const deployContract = async () => {
+  const deployContract = async ({addressTo, amount, expiry, message, markedFor, iso_expiry}) => {
     try {
       if (ethereum) {
-        const { addressTo, amount, keyword, message, markedFor } = formData;
         const parsedAmount = ethers.utils.parseEther(amount);
 
         if(!window.ethereum) {
@@ -192,12 +165,12 @@ export const TransactionsProvider = ({ children }) => {
           alert("INVALID TO ADDRESS!");
           return;
         }
-      
-        const thirdParties = markedFor.split(',').map(item => item.trim());
+
+        const thirdParties = markedFor;
         console.log(thirdParties);
 
         // verify third parties
-        if(thirdParties.length == 0) {
+        if(thirdParties.length === 0) {
           alert("Need to mark for atleast one address!");
           return;
         }
@@ -216,7 +189,7 @@ export const TransactionsProvider = ({ children }) => {
 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        
+
         // const bytecode = fs.readFileSync('test_contract_sol_Macroon.bin').toString();
         const abi = _abi;
         console.log("CONTRACT ABI: " + abi);
@@ -228,12 +201,12 @@ export const TransactionsProvider = ({ children }) => {
 
         // const senderAdress = await signer.getAddress();
         // console.log("SENDER ADDDDDRRR: " + senderAdress);
-        
+
 
         const contract = await factory.deploy(addressTo, 0, {
           value: parsedAmount,
         });
-        
+
         await contract.deployTransaction.wait()
 
         console.log("CONTRACT ADDRESS: " + contract.address);
@@ -242,13 +215,22 @@ export const TransactionsProvider = ({ children }) => {
         // updating global current contract address
         current_contract_address = contract.address;
         window.localStorage.setItem("current_contract_address", contract.address);
+        const payload = {
+          intermediary_public_key: addressTo,
+          amount,
+          expiry: iso_expiry,
+          message,
+          contract_address: current_contract_address,
+          destination_public_keys: markedFor
+        }
+        await axios.post("app/transactions/save/", payload);
 
         const third_party_tx = await contract.addThirdParty(thirdParties);
         await third_party_tx.wait();
         console.log("Third Parties Added");
         alert("Contract marked and fully deployed!");
 
-        
+
       } else {
         console.log("No ethereum object  HELLLLLLLLO");
       }
@@ -259,49 +241,49 @@ export const TransactionsProvider = ({ children }) => {
     }
   };
 
-  const interactContract = async () => {
-    try {
+  const interactContract = async ({addressTo, amount, message, contract_address}) => {
       if (ethereum) {
-        const { addressTo, amount, keyword, message, markedFor } = formData;
         const parsedAmount = ethers.utils.parseEther(amount);
 
         if(!window.ethereum) {
           console.log("WTF WTF WTF");
         }
 
-        // verify toAdress
+        // verify toAddress
         if(!ethers.utils.isAddress(addressTo)) {
           console.log("INVALID TO ADDRESS!");
           alert("INVALID TO ADDRESS!");
           return;
         }
-        
-        current_contract_address = localStorage.getItem("current_contract_address");
+
+        current_contract_address = contract_address;
 
         console.log(current_contract_address);
         const abi = _abi;
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(current_contract_address, abi, signer);
-        
+
         const senderAdress = await signer.getAddress();
         console.log("SENDER ADDDDDRRR: " + senderAdress);
 
         console.log("CONTRACT ADDRESS: " + contract.address);
 
-        
+
         const pay_tx = await contract.payMoneyTo(addressTo,  parsedAmount);
         await pay_tx.wait();
+        const payload = {
+          moneyReceiver_public_key: addressTo,
+          amount,
+          message
+        }
+        await axios.post("app/payments/save/", payload)
         console.log("FIRST SENT");
-        
+
       } else {
         console.log("No ethereum object  HELLLLLLLLO");
       }
-    } catch (error) {
-      console.log(error);
 
-      throw new Error("No ethereum object Hell2");
-    }
   };
 
 
@@ -312,8 +294,8 @@ export const TransactionsProvider = ({ children }) => {
   }, [transactionCount]);
 
   return (
-    <TransactionContext.Provider
-      value={{
+      <TransactionContext.Provider
+          value={{
         transactionCount,
         connectWallet,
         transactions,
@@ -325,8 +307,8 @@ export const TransactionsProvider = ({ children }) => {
         deployContract,
         interactContract,
       }}
-    >
-      {children}
-    </TransactionContext.Provider>
+      >
+          {children}
+      </TransactionContext.Provider>
   );
-};
+}
