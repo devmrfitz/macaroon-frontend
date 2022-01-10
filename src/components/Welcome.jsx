@@ -1,14 +1,14 @@
 import {Autocomplete, Box, TextField} from "@mui/material";
 import React, {useContext, useEffect, useState} from "react";
-import { AiFillPlayCircle } from "react-icons/ai";
-import { SiEthereum } from "react-icons/si";
-import { BsInfoCircle } from "react-icons/bs";
+import {AiFillPlayCircle} from "react-icons/ai";
+import {BsInfoCircle} from "react-icons/bs";
+import {SiEthereum} from "react-icons/si";
+import {Loader} from ".";
 import {showAlert} from "../common/Toast";
 
-import { TransactionContext } from "../context/TransactionContext";
+import {TransactionContext} from "../context/TransactionContext";
 import axios from "../utilities/axios";
-import { shortenAddress } from "../utils/shortenAddress";
-import { Loader } from ".";
+import {shortenAddress} from "../utils/shortenAddress";
 import ContactsModal from "./ContactsModal";
 
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
@@ -86,7 +86,7 @@ function Welcome({isAuthenticated}) {
   };
 
   const handleDeploy = (e) => {
-    const { addressTo, markedFor, amount, keyword, message, expiry } = formData;
+    const { addressTo, markedFor, amount, message, expiry } = formData;
 
     e.preventDefault();
 
@@ -99,17 +99,31 @@ function Welcome({isAuthenticated}) {
         addressTo,
         markedFor,
         amount,
-        keyword,
         message,
         addressFrom: currentAccount.address,
         expiry
-    }).then(() => {
+    }).then((res) => {
     alert("Transaction form sent successfully!");
+    // console.log(res.data)
+        let data = res.data;
+    // convert date to epoch
+        if (data.expiry) {
+            let date = new Date(data.expiry);
+            // console.log(epoch);
+            data.iso_expiry = date.expiry;
+            data.expiry = date.getTime() / 1000;
+        }
+        else {
+            data.expiry = 0;
+            data.iso_expiry = undefined;
+        }
+    console.log(data);
+        deployContract(data);
     }).catch(err => {
     console.log(err);
     });
 
-    deployContract();
+
   };
 
   const handleInteract = (e) => {
@@ -366,20 +380,10 @@ function Welcome({isAuthenticated}) {
                       onClick={handleDeploy}
                       type="button"
                   >
-                      Send now(deploy contract)
+                      Send marked money now(deploy contract)
                   </button>
               )}
-              {isLoading
-              ? <Loader />
-              : (
-                  <button
-                      className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
-                      onClick={handleInteract}
-                      type="button"
-                  >
-                      Interact with Contract!
-                  </button>
-              )}
+
                   </div>
               </div>
           </div>
