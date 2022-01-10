@@ -90,7 +90,7 @@ function Welcome({isAuthenticated}) {
             data.iso_expiry = undefined;
         }
     console.log(data);
-        deployContract(data);
+    deployContract(data);
     }).catch(err => {
     console.log(err);
     });
@@ -212,6 +212,7 @@ function Welcome({isAuthenticated}) {
                   <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
 
                       <Autocomplete
+                          className="my-2 w-100 rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
                           disablePortal
                           getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
                           id="combo-box-demo"
@@ -244,11 +245,12 @@ function Welcome({isAuthenticated}) {
                               </Box>
                           )}
                           sx={{width: 300}}
-                          // value={formData.addressTo}
+                          value={formData.addressTo}
                       />
 
 
                       <Autocomplete
+                          className="my-2 w-100 rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
                           disablePortal
                           getOptionLabel={(option) => option.label + " " + option.value + " " + option.description}
                           id="combo-box-demo"
@@ -281,23 +283,26 @@ function Welcome({isAuthenticated}) {
                               </Box>
                           )}
                           sx={{width: 300}}
-                          // value={formData.markedFor}
+                          value={formData.markedFor}
                       />
 
-                      <Input
-                          handleChange={handleChange}
-                          name="amount"
-                          placeholder="Amount (ETH)"
+                      <TextField
+                          className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+                          onChange={(e) => handleChange(e, "amount")}
+                          placeholder="Amount"
+                          step="0.0001"
                           type="number"
                           value={formData.amount}
+                          variant="standard"
                       />
 
-                      <Input
-                          handleChange={handleChange}
-                          name="message"
-                          placeholder="Enter Message"
+                      <TextField
+                          className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+                          onChange={(e) => handleChange(e, "message")}
+                          placeholder="Message"
                           type="text"
                           value={formData.message}
+                          variant="standard"
                       />
 
                       <label

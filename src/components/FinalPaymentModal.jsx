@@ -138,7 +138,7 @@ export default function FinalPaymentModal({contacts, show, setShow, contract_add
                         }
                         );}}
                 >
-                    Submit Payment
+                    Pay Now
                 </Button>
             </Modal.Footer>
         </Modal>
