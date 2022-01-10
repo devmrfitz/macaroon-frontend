@@ -25,3 +25,8 @@ typechain
 #Hardhat files
 cache
 artifacts
+
+
+#NEW 
+.pnp.js
+.yarn/*
