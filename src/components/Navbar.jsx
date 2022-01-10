@@ -1,27 +1,22 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Button} from "react-bootstrap";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 
 import logo from "../../images/logo.png";
+import {TransactionContext} from "../context/TransactionContext";
 import GoogleSignIn from "./GoogleSignIn";
-
-function NavBarItem({ title, classprops, onClick }) {
-  return (
-      <li
-          className={`mx-4 cursor-pointer ${classprops}`}
-          onClick={onClick}
-      >
-          {title}
-      </li>)
-}
 
 function Navbar({isAuthenticated, setLoggedIn}) {
     const [googleState, setGoogleState] = useState("button");
 
     const [toggleMenu, setToggleMenu] = React.useState(false);
+    const {
+        currentAccount,
+    } = useContext(TransactionContext);
 
-  return (
+
+    return (
       <nav className="w-full flex md:justify-center justify-between items-center p-4">
           <div className="md:flex-[0.5] flex-initial justify-center items-center">
               <img
@@ -33,7 +28,7 @@ function Navbar({isAuthenticated, setLoggedIn}) {
 
           <ul className="text-white md:flex hidden list-none flex-row justify-between items-center flex-initial">
 
-              {(!isAuthenticated)?(
+              {(currentAccount)?((!isAuthenticated)?(
                   <GoogleSignIn
                       isAuthenticated={isAuthenticated}
                       setLoggedIn={setLoggedIn}
@@ -53,7 +48,7 @@ function Navbar({isAuthenticated, setLoggedIn}) {
                       variant="dark"
                   >
                       SignOut
-                  </Button>)}
+                  </Button>)):null}
 
           </ul>
 

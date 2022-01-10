@@ -76,7 +76,6 @@ function Welcome({isAuthenticated}) {
         addressFrom: currentAccount.address,
         expiry,
     }).then((res) => {
-    alert("Transaction form sent successfully!");
         let data = res.data;
 
     // convert date to epoch

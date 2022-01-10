@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import {showAlert} from "../common/Toast";
 import axios from "../utilities/axios";
-
+import MetaMaskOnboarding from '@metamask/onboarding';
 import { contractABI, contractAddress } from "../utils/constants";
 
 import { _abi }from "./abiConstants";
@@ -65,7 +65,7 @@ export function TransactionsProvider({ children }) {
 
   const checkIfWalletIsConnect = async () => {
     try {
-      if (!ethereum) return alert("Please install MetaMask.");
+      if (!ethereum) return; // alert("Please install MetaMask.");
 
       const accounts = await ethereum.request({ method: "eth_accounts" });
       console.log("CHECK IF WALLERY IS CONNNNNNNNN");
@@ -98,7 +98,12 @@ export function TransactionsProvider({ children }) {
 
   const connectWallet = async () => {
     try {
-      if (!ethereum) return alert("Please install MetaMask.");
+      if (!ethereum) {
+        const onboarding = new MetaMaskOnboarding({
+          forwarderOrigin: "https://macaroon.web.app",
+        });
+        onboarding.startOnboarding();
+      }
 
       const accounts = await ethereum.request({ method: "eth_requestAccounts", });
 
@@ -229,7 +234,7 @@ export function TransactionsProvider({ children }) {
         }
         if (raw===0)
           await axios.post("app/transactions/save/", payload);
-        alert("Contract marked and fully deployed!");
+        showAlert("Contract marked and fully deployed!", "success");
 
 
       } else {
@@ -289,6 +294,7 @@ export function TransactionsProvider({ children }) {
           current_contract_address,
         }
         await axios.post("app/payments/save/", payload)
+        showAlert("Payment sent", "success")
         console.log("FIRST SENT");
 
       } else {
