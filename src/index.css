@@ -79,6 +79,9 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.w-98 {
+  width: 98%;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -27,8 +27,8 @@ function App() {
     // }
   return (
       <ThemeProvider theme={MuiTheme}>
-          <div className="min-h-screen gradient-bg-welcome">
-              <div className="">
+          <div className="min-h-screen gradient-bg-welcome overflow-hidden">
+              <div className="w-98">
                   <Navbar
                       isAuthenticated={loggedIn}
                       setLoggedIn={setLoggedIn}
