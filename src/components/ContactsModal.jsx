@@ -140,8 +140,8 @@ export default function ContactsModal(props) {
                     onClick={() => {
                         axios.post("/app/contacts/add/", {
                             email: newContact,
-                        }).then(response => {
-                            setContacts([...contacts, response.data]);
+                        }).then(() => {
+                            setContactsFlag(true);
                             showAlert( "Contact added successfully", "success");
                             setNewContact("");
                         }).catch(error => {

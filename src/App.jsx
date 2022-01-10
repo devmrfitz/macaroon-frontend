@@ -18,6 +18,7 @@ function App() {
     const setLoggedIn = () => {
         authSetLoggedIn();
         _setLoggedIn(true);
+        window.location.reload();
     }
 
     // const setLoggedOut = () => {
