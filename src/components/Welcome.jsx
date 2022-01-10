@@ -283,6 +283,7 @@ function Welcome({isAuthenticated}) {
                               </Box>
                           )}
                           sx={{width: 300}}
+                          // value={formData.addressTo}
                       />
 
 
@@ -318,6 +319,7 @@ function Welcome({isAuthenticated}) {
                               </Box>
                           )}
                           sx={{width: 300}}
+                          // value={formData.markedFor}
                       />
 
                       <Input
@@ -325,6 +327,7 @@ function Welcome({isAuthenticated}) {
                           name="amount"
                           placeholder="Amount (ETH)"
                           type="number"
+                          value={formData.amount}
                       />
 
                       <Input
@@ -332,6 +335,7 @@ function Welcome({isAuthenticated}) {
                           name="message"
                           placeholder="Enter Message"
                           type="text"
+                          value={formData.message}
                       />
 
                       <label
@@ -342,13 +346,12 @@ function Welcome({isAuthenticated}) {
                               Expiry:
                           </p>
 
-                          {/* <div></div> */}
-
                           <Input
                               handleChange={handleChange}
                               name="expiry"
                               placeholder="Enter Expiry Date"
                               type="date"
+                              value={formData.expiry}
                           />
                       </label>
 

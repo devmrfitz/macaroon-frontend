@@ -28,12 +28,10 @@ function Navbar({isAuthenticated, setLoggedIn}) {
           </div>
 
           <ul className="text-white md:flex hidden list-none flex-row justify-between items-center flex-initial">
-              {["Market", "Exchange", "Tutorials", "Wallets"].map((item, index) => (
-                  <NavBarItem
-                      key={item + index}
-                      title={item}
-                  />
-        ))}
+              {/*<NavBarItem*/}
+              {/*    classprops="my-2 text-lg"*/}
+              {/*    title={"Payments received"}*/}
+              {/*/>*/}
 
               <li className="">
                   <GoogleSignIn
@@ -72,13 +70,10 @@ function Navbar({isAuthenticated, setLoggedIn}) {
                       <AiOutlineClose onClick={() => setToggleMenu(false)} />
                   </li>
 
-                  {["Market", "Exchange", "Tutorials", "Wallets"].map(
-              (item, index) => (<NavBarItem
-                  classprops="my-2 text-lg"
-                  key={item + index}
-                  title={item}
-                                />),
-            )}
+                  {/*<NavBarItem*/}
+                  {/*    classprops="my-2 text-lg"*/}
+                  {/*    title={"Payments received"}*/}
+                  {/*/>*/}
               </ul>
         )}
           </div>

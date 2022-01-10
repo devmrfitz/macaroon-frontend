@@ -2,6 +2,8 @@
 import {createTheme, ThemeProvider} from "@mui/material";
 import React, {useState} from "react";
 import { Navbar, Welcome, Footer, Services, Transactions } from "./components";
+import MarkedTransactionsReceived from "./components/MarkedTransactionsReceived";
+import MarkedTransactionsSent from "./components/MarkedTransactionsSent";
 import {authSetLoggedIn} from "./utilities/auth";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -24,8 +26,8 @@ function App() {
     // }
   return (
       <ThemeProvider theme={MuiTheme}>
-          <div className="min-h-screen">
-              <div className="gradient-bg-welcome">
+          <div className="min-h-screen gradient-bg-welcome">
+              <div className="">
                   <Navbar
                       isAuthenticated={loggedIn}
                       setLoggedIn={setLoggedIn}
@@ -36,11 +38,23 @@ function App() {
                   />
               </div>
 
-              <Services />
+              {loggedIn && (
+                  <div className="row gradient-bg-transactions">
 
-              <Transactions />
+                      <div className="col-12 col-md-6 my-3">
+                          <MarkedTransactionsSent />
+                      </div>
 
-              <Footer />
+                      <div className="col-12 col-md-6 my-3">
+                          <MarkedTransactionsReceived />
+                      </div>
+
+
+                  </div>)}
+
+              {/*<Services />*/}
+
+              {/*<Footer />*/}
           </div>
       </ThemeProvider>)
 }
