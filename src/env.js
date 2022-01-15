@@ -1,4 +1,4 @@
-const backend = "https://marked-money.herokuapp.com";
+const backend = "https://macaroon-backend.azurewebsites.net";
 
 export default backend
 
