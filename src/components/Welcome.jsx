@@ -59,6 +59,8 @@ function Welcome({isAuthenticated}) {
     })
 
   const handleDeploy = (e) => {
+        if (!window.ethereum)
+            showAlert("Please click on \"Connect Wallet\" before attempting to transfer funds", "error");
     const { addressTo, markedFor, amount, message, expiry } = formData;
 
     e.preventDefault();
